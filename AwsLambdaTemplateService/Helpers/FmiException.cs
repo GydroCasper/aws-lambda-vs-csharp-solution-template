@@ -2,7 +2,7 @@
 
 namespace $safeprojectname$.Helpers
 {
-    public class CustomLambdaException : Exception
+    public class FmiException: Exception
     {
         public string Body { get; }
 

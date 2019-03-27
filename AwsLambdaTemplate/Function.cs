@@ -5,24 +5,25 @@ using Amazon.Lambda.Core;
 using $safeprojectname$.Code;
 using $safeprojectname$.Dto;
 using $safeprojectname$.Interfaces;
-using $safeprojectname$.Service.Code;
 using $safeprojectname$.Service.Helpers;
-using $safeprojectname$.Service.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
+using Serilog;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
 
 namespace $safeprojectname$
 {
+    [ExcludeFromCodeCoverage]
     public class Function
     {
         private readonly IServiceProvider _serviceProvider;
 
         public Function()
         {
-            _serviceProvider = BuildServiceProvider();
+            _serviceProvider = ConfigureServices();
         }
 
         /// <summary>
@@ -33,21 +34,23 @@ namespace $safeprojectname$
         /// <returns></returns>
         public async Task<APIGatewayProxyResponse> FunctionHandler(string input, ILambdaContext context)
         {
-            var result = await _serviceProvider.GetService<IRun>().Run(input, context);
-
-            return new APIGatewayProxyResponse
+            using (var scope = _serviceProvider.CreateScope())
             {
-                StatusCode = HttpStatusCode.OK,
-                Body = result
-            };
+                var result = await scope.ServiceProvider.GetService<IRun>().Run(input, context);
+
+                return new APIGatewayProxyResponse
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Body = result
+                };
+            }
         }
 
-        private static IServiceProvider BuildServiceProvider()
+        private static IServiceProvider ConfigureServices()
         {
             var serviceCollection = new ServiceCollection();
 
             serviceCollection.AddScoped<IRun, App>();
-            serviceCollection.AddScoped<ILogger, Logger>();
 
             serviceCollection.AddScoped(sp => BuildConfiguration());
 
@@ -56,14 +59,23 @@ namespace $safeprojectname$
             serviceCollection.Configure<AppSettings>(configuration);
             serviceCollection.AddOptions();
 
+            var loggerConfig = new LoggerConfiguration()
+                .WriteTo.Console()
+                .CreateLogger();
+
+            serviceCollection.AddLogging(c => c.AddSerilog(loggerConfig));
+
             return serviceCollection.BuildServiceProvider();
         }
 
         private static IConfiguration BuildConfiguration()
         {
+            var environmentName = Environment.GetEnvironmentVariable("EnvironmentName");
+
             return new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", true, true)
-//                .AddSystemsManager("/business-systems/okta-authentication")
+                .AddJsonFile($"appsettings.{environmentName}.json", true, true)
+                //                .AddSystemsManager("/ssm/path")
                 .Build();
         }
     }

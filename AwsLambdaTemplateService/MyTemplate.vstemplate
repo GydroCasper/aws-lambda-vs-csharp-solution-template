@@ -17,18 +17,14 @@
   </TemplateData>
   <TemplateContent>
     <Project TargetFileName="AwsLambdaTemplateService.csproj" File="AwsLambdaTemplateService.csproj" ReplaceParameters="true">
-      <Folder Name="Code" TargetFolderName="Code">
-        <ProjectItem ReplaceParameters="true" TargetFileName="Logger.cs">Logger.cs</ProjectItem>
-      </Folder>
+      <Folder Name="Code" TargetFolderName="Code" />
       <Folder Name="Dto" TargetFolderName="Dto" />
       <Folder Name="Helpers" TargetFolderName="Helpers">
         <ProjectItem ReplaceParameters="true" TargetFileName="AppSettings.cs">AppSettings.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="Const.cs">Const.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="FmiException.cs">FmiException.cs</ProjectItem>
       </Folder>
-      <Folder Name="Interfaces" TargetFolderName="Interfaces">
-        <ProjectItem ReplaceParameters="true" TargetFileName="ILogger.cs">ILogger.cs</ProjectItem>
-      </Folder>
+      <Folder Name="Interfaces" TargetFolderName="Interfaces" />
     </Project>
   </TemplateContent>
 </VSTemplate>
