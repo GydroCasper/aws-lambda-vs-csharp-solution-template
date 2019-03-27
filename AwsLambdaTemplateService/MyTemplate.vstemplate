@@ -22,7 +22,7 @@
       <Folder Name="Helpers" TargetFolderName="Helpers">
         <ProjectItem ReplaceParameters="true" TargetFileName="AppSettings.cs">AppSettings.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="Const.cs">Const.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="FmiException.cs">FmiException.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="CustomLambdaException.cs">CustomLambdaException.cs</ProjectItem>
       </Folder>
       <Folder Name="Interfaces" TargetFolderName="Interfaces" />
     </Project>

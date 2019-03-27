@@ -22,7 +22,7 @@ namespace $safeprojectname$.Code
             {
                 return string.Empty;
             }
-            catch (CustomException ex)
+            catch (CustomLambdaException ex)
             {
                 _logger.LogError(ex, $"Body: {ex.Body}. Timestamp: {DateTime.Now: yyyy MMMM dd HH:mm: ss.fff tt zz}");
                 throw;
